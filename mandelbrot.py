@@ -25,14 +25,6 @@ class Mandelbrot():
         self.xScaleFactor = self.w/canvasW
         self.c, self.z = 0, 0
 
-    def shiftView(self, event):
-        self.xCenter = translate(event.x*self.xScaleFactor, 0, self.w, self.xmin, self.xmax)
-        self.yCenter = translate(event.y*self.yScaleFactor, self.h, 0, self.ymin, self.ymax)
-        self.xmax = self.xCenter + self.xDelta
-        self.ymax = self.yCenter + self.yDelta
-        self.xmin = self.xCenter - self.xDelta
-        self.ymin = self.yCenter - self.yDelta
-
     def zoomOut(self, event):
         self.xCenter = translate(event.x*self.xScaleFactor, 0, self.w, self.xmin, self.xmax)
         self.yCenter = translate(event.y*self.yScaleFactor, self.h, 0, self.ymin, self.ymax)

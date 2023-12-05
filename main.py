@@ -9,7 +9,15 @@ from PIL import Image, ImageTk
 ctk.set_default_color_theme('dark-blue')
 
 
+''''
 
+
+
+
+
+
+'''
+"0[p"
 class MainWindow(ctk.CTk):
     def __init__(self,x=-0.75,y=0,m=1.5,iterations=None, imgW = None, imgH=None):
         super().__init__()
@@ -21,7 +29,7 @@ class MainWindow(ctk.CTk):
         ctk.set_appearance_mode('dark')
 
         self.img = None
-        self.canvasW =700
+        self.canvasW = 700
         self.canvasH = 600
         self.title('FractalToSound')
         self.geometry('800x800')
@@ -101,27 +109,42 @@ class MainWindow(ctk.CTk):
             pixelColors.append(self.palette[p[2] % 256])
         self.pixelColors = pixelColors
 
-    def drawPixels(self):
+    '''def drawPixels_image(self):
         img = Image.new('RGB', (self.fractal.w, self.fractal.h), "black")
         pixels = img.load()  # create the pixel map
         for index, p in enumerate(self.fractal.pixels):
             pixels[int(p[0]), int(p[1])] = self.pixelColors[index]
         self.img = img
-        '''
         if self.save:
             self.saveImage(None)
-            '''
         photoimg = ImageTk.PhotoImage(img.resize((self.canvasW, self.canvasH)))
-        self.background = photoimg
+        self.background = photoimg'''
+
+    def drawPixels_image(self):
+        # Create PPM header
+        ppm_header = f'P6 {self.fractal.w} {self.fractal.h} 255\n'
+
+        # Create PPM image data
+        ppm_data = bytearray()
+        for p in self.fractal.pixels:
+            color = self.palette[p[2] % 256]
+            ppm_data.extend(color)
+
+        # Combine header and data to form PPM image string
+        ppm_image = ppm_header.encode() + ppm_data
+
+        # Load PPM image string into PhotoImage
+        self.img = PhotoImage(data=ppm_image)
+
+        # Display the image on the canvas
+        self.main_canvas.create_image(0, 0, image=self.img, anchor=NW)
 
     def draw(self):
         print('-' * 20)
         start = time.time()
         self.fractal.getPixels()
         self.getColors()
-        self.drawPixels()
-        self.main_canvas.create_image(0, 10, image=self.background, anchor=NW)
-        #self.main_canvas.pack(fill=BOTH, expand=1)
+        self.drawPixels_image()  # Use the new method for drawing
         print("Process took {} seconds".format(round(time.time() - start, 2)))
         print("Current coordinates (x, y, m): {}, {}, {}".format(self.fractal.xCenter, self.fractal.yCenter,
                                                                  self.fractal.delta))
@@ -168,5 +191,5 @@ def clamp(x):
     return max(0, min(x, 255))
 
 if __name__ == '__main__':
-    program = MainWindow(imgH=900,imgW=900)
+    program = MainWindow(imgH=600, imgW=600,iterations=150)
     program.mainloop()
