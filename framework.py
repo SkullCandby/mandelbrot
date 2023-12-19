@@ -35,7 +35,6 @@ class Framework(Frame):
 
         parent.bind("<Button-1>", self.zoomIn)
         parent.bind("<Button-3>", self.zoomOut)
-        parent.bind("<Control-1>", self.shiftView)
         parent.bind("<Control-3>", self.changePalette)
         parent.bind("<Button-2>", self.saveImage)
 
@@ -47,9 +46,7 @@ class Framework(Frame):
         self.fractal.zoomOut(event)
         self.draw()
 
-    def shiftView(self, event):
-        self.fractal.shiftView(event)
-        self.draw()
+
 
     def draw(self):
         print('-' * 20)
@@ -109,15 +106,3 @@ class Framework(Frame):
 def clamp(x):
     return max(0, min(x, 255))
 
-
-def main():
-    master = Tk()
-    height = round(master.winfo_screenheight()*0.9)
-    render = Framework(master, height, iterations=255,
-                           imgWidth=800, imgHeight=800)
-    master.geometry("{}x{}".format(render.canvasW, render.canvasH))
-    master.mainloop()
-
-
-if __name__ == "__main__":
-    main()
